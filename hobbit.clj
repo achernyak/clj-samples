@@ -36,7 +36,7 @@
                      (set [part (matching-part part)])))))))
 
 (defn better-symmetrize-body-parts
-  "Expects a seq of maps that have a :name and :sizze"
+  "Expects a seq of maps that have a :name and :size"
   [asym-body-parts]
   (reduce (fn [final-body-parts part]
             (into final-body-parts (set [part (matching-part part)])))
@@ -54,7 +54,6 @@
         part
         (recur remaining (+ accumulated-size (:size (first remaining))))))))
 
-
 (defn plus-hundred
   [num]
   (+ num 100))
@@ -68,3 +67,25 @@
 (defn mapset
   [f xs]
   (set (map f xs)))
+
+(def asym-alian-body-parts [{:name "one-leg" :size 1}
+                            {:name "one-arm" :size 1}
+                            {:name "head" :size 3}])
+
+(defn matching-radial-parts
+  ([part]
+   (map #(matching-radial-parts part %) ["two-" "three-" "four-" "five-"]))
+  ([part prefix]
+   {:name (clojure.string/replace (:name part) #"^one-" prefix)
+    :size (:size part)}))
+
+(defn body-parts-generator
+  "Expects a seq of maps taht have a :name and :size"
+  [matching-function asym-body-parts]
+  (reduce (fn [final-body-parts part]
+            (into final-body-parts
+                  (set (conj [part] (matching-function part)))))
+          []
+          asym-body-parts))
+
+(body-parts-generator matching-radial-parts asym-alian-body-parts)
