@@ -36,7 +36,7 @@
                      (set [part (matching-part part)])))))))
 
 (defn better-symmetrize-body-parts
-  "Expects a seq of maps taht have a :name and :sizze"
+  "Expects a seq of maps that have a :name and :sizze"
   [asym-body-parts]
   (reduce (fn [final-body-parts part]
             (into final-body-parts (set [part (matching-part part)])))
@@ -55,3 +55,16 @@
         (recur remaining (+ accumulated-size (:size (first remaining))))))))
 
 
+(defn plus-hundred
+  [num]
+  (+ num 100))
+
+(defn dec-maker
+  [dec-by]
+  #(- % dec-by))
+
+(def dec9 (dec-maker 9))
+
+(defn mapset
+  [f xs]
+  (set (map f xs)))
