@@ -40,9 +40,30 @@
   [minimum-glitter records]
   (list-names(filter #(>= (:glitter-index %) minimum-glitter) records)))
 
+(def validations {:name string?
+                  :glitter-index integer?})
+
+(defn validate
+  "Checks if a record is valid"
+  [validators records]
+  (not (some false?
+             (map (fn [validator]
+                    ((val validator)
+                     ((key validator) records)))
+                  validators))))
+
 (defn append
   [suspect-list suspect]
   (conj suspect-list suspect))
 
+(defn join-record
+  [record]
+  (clojure.string/join ","
+                       (map (fn [field]
+                              (-> field second str))
+                            record)))
 
 
+(defn csv
+  [records]
+  (clojure.string/join "\n" (map join-record records)))
