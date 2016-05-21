@@ -31,6 +31,13 @@
                  (map vector vamp-keys unmapped-row)))
        rows))
 
+(defn list-names
+  "Takes a seq of map with :name and returns a seq of names"
+  [rows]
+  (map #(:name %) rows))
+
 (defn glitter-filter
   [minimum-glitter records]
-  (filter #(>= (:glitter-index %) minimum-glitter) records))
+  (list-names(filter #(>= (:glitter-index %) minimum-glitter) records)))
+
+
