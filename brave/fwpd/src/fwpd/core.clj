@@ -40,4 +40,9 @@
   [minimum-glitter records]
   (list-names(filter #(>= (:glitter-index %) minimum-glitter) records)))
 
+(defn append
+  [suspect-list suspect]
+  (conj suspect-list suspect))
+
+
 
