@@ -32,3 +32,26 @@
 (defn points
   [locations]
   (clojure.string/join " " (map latlng->point locations)))
+
+(defn line
+  [points]
+  (str "<polyline points=\"" points "\" />"))
+
+(defn transform
+  "Just chains other functions"
+  [width height locations]
+  (->> locations
+       translate-to-00
+       (scale width height)))
+
+(defn xml
+  "svg 'template', which also flips teh coordinate system"
+  [width height locations]
+   (str "<svg height=\"" height "\" width=\"" width "\">"
+        "<g transform=\"translate(0, " height")\">"
+        "<g transform=\"rotate(-90)\">"
+        (-> (transform width height locations)
+            points
+            line)
+        "</g></g>"
+        "</svg>"))
