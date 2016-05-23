@@ -10,3 +10,28 @@
 (defmacro infix-2
   [[operand1 op operand2]]
   (list op operand1 operand2))
+
+(defmacro my-print
+  [expression]
+  (list 'let ['result expression]
+        (list 'println 'result)
+        'result))
+
+(defmacro bad-code-critic
+  "Phrases are courtesy of Hermes Conrad from Futurama"
+  [bad good]
+  (list 'do
+        (list 'println
+              "Great squid of Madrid, this is bad code:"
+              (list 'quote bad))
+        (list 'println
+              "Sweet gorilla of Manila, this is good code:"
+              (list 'quote good))))
+
+(defmacro code-critic
+  "Phrases are courtesy of Hermes Conrad from Futurama"
+  [bad good]
+  `(do (println "Great squic of Madrid, this is bad code:"
+                (quote ~bad))
+       (println "Sweet gorilla of Manila, this is good code:"
+                (quote ~good))))
