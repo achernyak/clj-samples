@@ -50,15 +50,15 @@
   {:name "Mitchard Blimmons"
    :email "mitchard.blimmonsgmail.com"})
 
-(def order-details-validator
+(def order-details-validations
   {:name
    ["Please enter a name" not-empty]
 
    :email
-   ["Please enter an email address" not empty]
+   ["Please enter an email address" not-empty
 
-   "Your email address doesn'tt look like an email addres"
-   #(or (empty? %) (re-seq #"@" %))})
+   "Your email address doesn't look like an email addres"
+   #(or (empty? %) (re-seq #"@" %))]})
 
 (defn error-messages-for
   "Return a seq of error messages"
@@ -79,3 +79,10 @@
                 (assoc errors fieldname error-messages))))
           {}
           validations))
+
+(defmacro if-valid
+  "Handle validation more concisely"
+  [to-validate validations errors-name & then-else]
+  `(let [~errors-name (validate ~to-validate ~validations)]
+     (if (empty? ~errors-name)
+       ~@then-else)))
