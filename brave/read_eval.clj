@@ -86,3 +86,10 @@
   `(let [~errors-name (validate ~to-validate ~validations)]
      (if (empty? ~errors-name)
        ~@then-else)))
+
+(defmacro when-valid
+  "Handles validation with a when"
+  [to-validate validations & then-when]
+  `(let [errors# (validate ~to-validate ~validations)]
+     (when (not(empty? errors#))
+       (do ~@then-when))))
