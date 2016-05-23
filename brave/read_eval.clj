@@ -93,3 +93,16 @@
   `(let [errors# (validate ~to-validate ~validations)]
      (when (not(empty? errors#))
        (do ~@then-when))))
+
+(defmacro defattrs
+  "Defines attribute retrieving functiosn"
+  [& functions]
+  `(do ~@(map #(defn (first %)
+             [attrs#]
+             ((second %) attrs#))
+        (partition 2 '~functions))))
+
+(macroexpand
+ (defattrs c-int :intelligence
+  c-str :strength
+  c-dex :dexterity))
