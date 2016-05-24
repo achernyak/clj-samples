@@ -97,10 +97,10 @@
 (defmacro defattrs
   "Defines attribute retrieving functiosn"
   [& functions]
-  `(do ~@(map #(defn (first %)
-             [attrs#]
-             ((second %) attrs#))
-        (partition 2 '~functions))))
+  `(map #(let [name# (first %)]
+                     (let [name# `(~fn [~xs]
+                                  ((second %) ~xs))]))
+        (partition 2 '~functions)))
 
 (macroexpand
  (defattrs c-int :intelligence
