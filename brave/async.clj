@@ -84,3 +84,17 @@
 (-> (enqueue saying (wait 200 "'Ello, gov'na!") (println @saying))
     (enqueue saying (wait 400 "Pip pip!") (println @saying))
     (enqueue saying (wait 400 "Cheerio!") (println @saying)))
+
+
+(def google "http://google.com/#q=")
+
+(def bing "http://bing.com/search?q=")
+
+(defn my-search
+  [search-term]
+  (let [search-promise (promise)]
+    (doseq [search [bing google]]
+      (future (let [results (slurp (clojure.string/join (concat search search-term)))]
+               (deliver search-promise (clojure.string/join (concat results search)))))
+    (println "And the winner is: " @search-promise))))
+
