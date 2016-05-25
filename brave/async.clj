@@ -53,4 +53,20 @@
   (Thread/sleep 100)
   (deliver ferengi-wisdom-promise "Whisper your way to success."))
 
+(defmacro wait
+  "Sleep 'timeout' seconds before evaluating body"
+  [timeout & body]
+  `(do (Thread/sleep ~timeout) ~@body))
 
+(let [saying3 (promise)]
+  (future (deliver saying3 (wait 100 "Cheerio!")))
+  @(let [saying2 (promise)]
+     (future (deliver saying2 (wait 400 "Pip pip!")))
+     @(let [saying1 (promise)]
+        (future (deliver saying1 (wait 200 "'Ello, gov'na!")))
+        (println @saying1)
+        saying1)
+     (println @saying2)
+     saying2)
+  (println @saying3)
+  saying3)
