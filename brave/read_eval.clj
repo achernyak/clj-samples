@@ -97,9 +97,7 @@
 (defmacro defattrs
   "Defines attribute retrieving functiosn"
   [& functions]
-  `(map #(let [name# (first %)]
-                     (let [name# `(~fn [~xs]
-                                  ((second %) ~xs))]))
+  `(map #(let [(first %) (second %)])
         (partition 2 '~functions)))
 
 (macroexpand

@@ -70,3 +70,17 @@
      saying2)
   (println @saying3)
   saying3)
+
+(defmacro enqueue
+  ([q concurrent-promise-name concurrent serialized]
+   `(let [~concurrent-promise-name (promise)]
+      (future (deliver ~concurrent-promise-name ~concurrent))
+      (deref ~q)
+      ~serialized
+      ~concurrent-promise-name))
+  ([concurrent-promise-name concurrent serialized]
+   `(enqueue (future) ~concurrent-promise-name ~concurrent ~serialized)))
+
+(-> (enqueue saying (wait 200 "'Ello, gov'na!") (println @saying))
+    (enqueue saying (wait 400 "Pip pip!") (println @saying))
+    (enqueue saying (wait 400 "Cheerio!") (println @saying)))
