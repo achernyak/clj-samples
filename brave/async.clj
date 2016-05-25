@@ -14,7 +14,7 @@
         (future (upload-document headshot)
                 (force notify))))
 
-(def yak-butter-internation
+(def yak-butter-international
   {:store "Yak Butter International"
    :price 90
    :smoothness 90})
@@ -37,3 +37,20 @@
   (and (<= (:price butter) 100)
        (>= (:smoothness butter) 97)
        butter))
+
+(time (some (comp satisfactory? mock-api-call)
+            [yak-butter-international butter-than-nothing baby-got-yak]))
+
+(time
+ (let [butter-promise (promise)]
+   (doseq [butter [yak-butter-international butter-than-nothing baby-got-yak]]
+     (future (if-let [satisfactory-butter (satisfactory? (mock-api-call butter))]
+               (deliver butter-promise satisfactory-butter))))
+   (println "And the winner is:" @butter-promise)))
+
+(let [ferengi-wisdom-promise (promise)]
+  (future (println "Here's some Ferengi wisdom:" @ferengi-wisdom-promise))
+  (Thread/sleep 100)
+  (deliver ferengi-wisdom-promise "Whisper your way to success."))
+
+
