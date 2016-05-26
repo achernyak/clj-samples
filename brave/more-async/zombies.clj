@@ -38,3 +38,15 @@
 
 (swap! fred update-in [:percent-deteriorated] + 1)
 (swap! fred update-in [:hunger-level] + 30)
+
+(defn percent-deteriorated-validator
+  [{:keys [percent-deteriorated]}]
+  (or (and (>= percent-deteriorated 0)
+           (<= percent-deteriorated 100))
+      (throw (IllegalStateException. "That's not mathy!"))))
+
+(def bobby
+  (atom
+   {:hunger-level 0 :percent-deteriorated 0}
+   :validator percent-deteriorated-validator))
+
