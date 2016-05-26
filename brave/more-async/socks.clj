@@ -17,4 +17,19 @@
 (def sock-gnome (ref (generate-sock-gnome "Barumpharumph")))
 
 (def dryer (ref {:name "LG 1337"
-                 :sock (set (map #(sock-count % 2) sock-varieties))}))
+                 :socks (set (map #(sock-count % 2) sock-varieties))}))
+
+(defn steal-sock
+  [gnome dryer]
+  (dosync
+   (when-let [pair (some #(if (= (:count %) 2) %) (:socks @dryer))]
+     (let [updated-count (sock-count (:variety pair) 1)]
+       (alter gnome update-in [:socks] conj updated-count)
+       (alter dryer update-in [:socks] disj pair)
+       (alter dryer update-in [:socks] conj updated-count)))))
+
+(defn similar-socks
+  [target-sock sock-set]
+  (filter #(= (:variety %) (:variety target-sock)) sock-set))
+
+
