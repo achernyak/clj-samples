@@ -12,5 +12,29 @@
 
 (swap! fred update-in [:hunger-level] + 10)
 
-(reset! fred {:hungler-level 0
+(reset! fred {:hunger-level 0
               :percent-deteriorated 0})
+
+(defn shuffle-speed
+  [zombie]
+  (* (:hunger-level zombie)
+     (- 100 (:percent-deteriorated zombie))))
+
+(defn shuffle-alert
+  [key watched old-state new-state]
+  (let [sph (shuffle-speed new-state)]
+    (if (> sph 5000)
+      (do
+        (println "Run you fool!")
+        (println "The zombie's SPH is now " sph))
+      (do
+        (println "Alls well with " key)
+        (println "SPH: " sph)))))
+
+(reset! fred {:hunger-level 22
+              :percent-deteriorated 2})
+
+(add-watch fred :fred-suffle-alert shuffle-alert)
+
+(swap! fred update-in [:percent-deteriorated] + 1)
+(swap! fred update-in [:hunger-level] + 30)
